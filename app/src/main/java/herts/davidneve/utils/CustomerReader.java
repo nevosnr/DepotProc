@@ -1,0 +1,39 @@
+package herts.davidneve.utils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import herts.davidneve.depotprocessor.model.Customer;
+
+public class CustomerReader {
+
+    //Using JAVA internal libraries rather than introducing external dependancies 
+
+    public Map<String, Customer> readCustomers(String PATH) {
+        Map<String, Customer> customerMap = new HashMap<>();
+
+        //Using any File IO operation it is good practice to use try/except/finally statements to ensure the application does not crash in the event of 
+        //a file not being readable or available.
+
+        try(BufferedReader br = new BufferedReader(new FileReader(PATH))){
+            String line;
+            while ((line = br.readLine()) != null){
+                String[] values = line.split(",");
+                if (values.length >= 2) {
+                    String fullName = values[0];
+                    String parcelId = values[1];
+                    int pos = 0;
+
+                    Customer customer = new Customer(fullName, parcelId, pos);
+                }
+            }
+        }
+        catch (IOException error){
+            error.printStackTrace();
+        }
+        return customerMap;
+    }    
+}

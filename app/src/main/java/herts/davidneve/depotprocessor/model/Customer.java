@@ -2,40 +2,40 @@ package herts.davidneve.depotprocessor.model;
 
 public class Customer {
 
-    private String customerFirstName;
-    private String customerLastName;
-    public String parcelID;
-    public int sequenceNumber;
+    private String _customerFirstName;
+    private String _customerLastName;
+    private String _parcelID;
+    private int _sequenceNumber;
 
     public Customer(String name, String id, int position){
         splitName(name);
-        this.parcelID = id;
-        this.sequenceNumber = position;
+        this._parcelID = id;
+        this._sequenceNumber = position;
     }
-    //method to break the customer name into its constituant parts
+    //method to break the customer name into its constituent parts
     private void splitName(String name){
         String[] fullName = name.split("\\s+");
-        this.customerFirstName = fullName[0];
+        this._customerFirstName = fullName[0];
         //conditional handles event that customer does not provide a full name.
         if (fullName.length >1){
-            this.customerLastName = fullName[1];
+            this._customerLastName = fullName[1];
         }
     }
-
+    //'Getters'
     public String getFirstName(){
-        return customerFirstName;
+        return _customerFirstName;
     }
 
     public String getLastName(){
-        return customerLastName;
+        return _customerLastName;
     }
 
     public String getId(){
-        return parcelID;
+        return _parcelID;
     } 
 
     public int getPos(){
-        return sequenceNumber;
+        return _sequenceNumber;
     }
     
 }
