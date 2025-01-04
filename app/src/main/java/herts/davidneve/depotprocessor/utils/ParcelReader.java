@@ -1,4 +1,4 @@
-package herts.davidneve.utils;
+package herts.davidneve.depotprocessor.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,6 +30,7 @@ public class ParcelReader {
             }
         }
         catch (IOException parcelError){
+            System.out.println("There was an error in reading the Parcel data.");
             parcelError.printStackTrace();
         }   
     return parcelMap;

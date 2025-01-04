@@ -1,4 +1,4 @@
-package herts.davidneve.utils;
+package herts.davidneve.depotprocessor.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,6 +32,7 @@ public class CustomerReader {
             }
         }
         catch (IOException error){
+            System.out.println("There was an error in reading the Customer data.");
             error.printStackTrace();
         }
         return customerMap;
