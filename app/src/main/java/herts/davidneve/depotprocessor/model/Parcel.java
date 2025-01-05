@@ -38,4 +38,8 @@ public class Parcel {
     public float getHeight(){
         return _height;
     }    
+
+    public int getDaysinDepot(){
+        return _numDaysInDepot;
+    }
 }

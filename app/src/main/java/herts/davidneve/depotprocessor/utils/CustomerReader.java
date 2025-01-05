@@ -28,6 +28,8 @@ public class CustomerReader {
                     int pos = 0;
 
                     Customer customer = new Customer(fullName, parcelId, pos);
+
+                    customerMap.put(parcelId, customer);
                 }
             }
         }

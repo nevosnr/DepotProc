@@ -26,6 +26,8 @@ public class ParcelReader {
                     int daysInDepot = Integer.parseInt(values[5]);
 
                     Parcel parcel = new Parcel(parcelId, weight, length, width, height, daysInDepot);
+
+                    parcelMap.put(parcelId, parcel);
                 }
             }
         }
