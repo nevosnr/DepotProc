@@ -18,16 +18,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import herts.davidneve.depotprocessor.model.Customer;
+import herts.davidneve.depotprocessor.model.CustomerReader;
 import herts.davidneve.depotprocessor.model.Parcel;
-import herts.davidneve.depotprocessor.utils.CustomerReader;
-import herts.davidneve.depotprocessor.utils.ParcelReader;
+import herts.davidneve.depotprocessor.model.ParcelReader;
 
 public class ParcelViewer extends JFrame {
 
-    //private JList<String> _parcelList;
     private JTable _parcelTable;
     private JTable _customerTable;
-    //private DefaultListModel<String> _listModel;
     private DefaultTableModel _tableModel;
     private DefaultTableModel _customerTableModel;
     private JButton _slctParcelFileBtn, _slctCustomerFileBtn, _prcParcelBtn, _prcCustomerBtn;
@@ -38,16 +36,13 @@ public class ParcelViewer extends JFrame {
     public ParcelViewer(){
         _parcelReader = new ParcelReader();
         _customerReader = new CustomerReader();
-        //_listModel = new DefaultListModel<>();
         _tableModel = new DefaultTableModel();
         _customerTableModel = new DefaultTableModel();
         _tableModel.setColumnIdentifiers(new String[] {"Parcel ID","Weight","Length","Width","Height","Days in Depot"});
         _customerTableModel.setColumnIdentifiers(new String[] {"Parcel ID", "Full Name"});
-       // _parcelList = new JList<>(_listModel);
         _parcelTable = new JTable(_tableModel);
         _customerTable = new JTable(_customerTableModel);
 
-       //_parcelList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         _statusLbl = new JLabel("Status: Waiting for user Action...");
 
         setTitle("File uploading");
@@ -145,21 +140,12 @@ public class ParcelViewer extends JFrame {
     private void ProcessFile(File file, boolean isParcelFile) {
         if(isParcelFile){
             Map<String, Parcel> parcelMap = _parcelReader.readParcels(file.getAbsolutePath());
-            //updateParcelList(parcelMap);
             updateParcelTable(parcelMap);
         }else{
             Map<String, Customer> customerMap = _customerReader.readCustomers(file.getAbsolutePath());
-            //updateCustomerList(customerMap);
             updateCustomerTable(customerMap);
         }
     }
-
-    // private void updateParcelList(Map<String, Parcel> parcelMap){
-    //     _listModel.clear();
-    //     for (String parcelId : parcelMap.keySet()){
-    //         _listModel.addElement(parcelId);
-    //     }
-    // }
 
     private void updateParcelTable(Map<String, Parcel> parcelMap){
         _tableModel.setRowCount(0);
@@ -174,13 +160,6 @@ public class ParcelViewer extends JFrame {
             });
         }
     }
-
-    // private void updateCustomerList(Map<String, Customer> customerMap){
-    //     _listModel.clear();
-    //     for (String parcelId : customerMap.keySet()){
-    //         _listModel.addElement(parcelId);
-    //     }
-    // }
 
     private void updateCustomerTable(Map<String, Customer> customerMap){
         _customerTableModel.setRowCount(0);
