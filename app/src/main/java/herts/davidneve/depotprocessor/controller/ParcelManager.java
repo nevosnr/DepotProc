@@ -7,13 +7,13 @@ import herts.davidneve.depotprocessor.model.Parcel;
 
 public class ParcelManager {
 
-    private Map<String, Parcel> parcelMap = new HashMap<>();
+    private Map<String, Parcel> _parcelMap = new HashMap<>();
 
     public void addParcel(Parcel parcel) {
-        parcelMap.put(parcel.getId(), parcel);
+        _parcelMap.put(parcel.getId(), parcel);
     }
 
     public Parcel getParcel(String id){
-        return parcelMap.get(id);
+        return _parcelMap.get(id);
     }    
 }

@@ -30,12 +30,15 @@ public class Customer {
         return _customerLastName;
     }
 
+    public String getFullName(){
+        return _customerFirstName + " " + _customerLastName;
+    }
+
     public String getId(){
         return _parcelID;
     } 
 
     public int getPos(){
         return _sequenceNumber;
-    }
-    
+    }    
 }
