@@ -1,5 +1,9 @@
 package herts.davidneve.depotprocessor.controller;
 
+import javax.swing.SwingUtilities;
+
+import herts.davidneve.depotprocessor.model.ParcelManager;
+import herts.davidneve.depotprocessor.model.QOfCustomers;
 import herts.davidneve.depotprocessor.view.ParcelViewer;
 
 public class DepotManager {
@@ -15,12 +19,16 @@ public class DepotManager {
     }
 
     public void startApp(){
-
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run(){
+                _mainDisp.setVisible(true);
+            }
+        });
     }
 
-    // public static void main(String[] args) {
-    //     DepotManager manager = new DepotManager();
-    //     manager.startApp();
-    // }
+    public static void main(String[] args) {
+        DepotManager manager = new DepotManager();
+         manager.startApp();
+    }
 }  
 

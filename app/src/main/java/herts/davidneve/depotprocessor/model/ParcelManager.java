@@ -1,12 +1,10 @@
-package herts.davidneve.depotprocessor.controller;
+package herts.davidneve.depotprocessor.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import herts.davidneve.depotprocessor.model.Parcel;
 
 public class ParcelManager {
 

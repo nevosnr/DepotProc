@@ -14,13 +14,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import herts.davidneve.depotprocessor.controller.ParcelManager;
-import herts.davidneve.depotprocessor.controller.QOfCustomers;
 import herts.davidneve.depotprocessor.model.Customer;
 import herts.davidneve.depotprocessor.model.Parcel;
+import herts.davidneve.depotprocessor.model.ParcelManager;
+import herts.davidneve.depotprocessor.model.QOfCustomers;
 
 public class ParcelViewer extends JFrame {
 
@@ -154,10 +153,5 @@ public class ParcelViewer extends JFrame {
                 customer.getFullName()
             });
         }
-    }
-
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(ParcelViewer::new);
-    }
-    
+    }    
 }
