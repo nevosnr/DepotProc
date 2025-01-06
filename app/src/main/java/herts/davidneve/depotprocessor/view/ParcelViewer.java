@@ -17,10 +17,10 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import herts.davidneve.depotprocessor.controller.ParcelManager;
+import herts.davidneve.depotprocessor.controller.QOfCustomers;
 import herts.davidneve.depotprocessor.model.Customer;
-import herts.davidneve.depotprocessor.model.CustomerReader;
 import herts.davidneve.depotprocessor.model.Parcel;
-import herts.davidneve.depotprocessor.model.ParcelReader;
 
 public class ParcelViewer extends JFrame {
 
@@ -28,14 +28,16 @@ public class ParcelViewer extends JFrame {
     private JTable _customerTable;
     private DefaultTableModel _tableModel;
     private DefaultTableModel _customerTableModel;
-    private JButton _slctParcelFileBtn, _slctCustomerFileBtn, _prcParcelBtn, _prcCustomerBtn;
+    private JButton _slctParcelFileBtn, _slctCustomerFileBtn, _viewCombinedDataBtn;
     private JLabel _statusLbl;
-    private ParcelReader _parcelReader;
-    private CustomerReader _customerReader;
+    private ParcelManager _parcelManager;
+    private QOfCustomers _customerQueue;
+    private Map<String, Parcel> parcelMap;
+    private Map<String, Customer> customerMap;
 
     public ParcelViewer(){
-        _parcelReader = new ParcelReader();
-        _customerReader = new CustomerReader();
+        _parcelManager = new ParcelManager();
+        _customerQueue = new QOfCustomers();
         _tableModel = new DefaultTableModel();
         _customerTableModel = new DefaultTableModel();
         _tableModel.setColumnIdentifiers(new String[] {"Parcel ID","Weight","Length","Width","Height","Days in Depot"});
@@ -53,15 +55,12 @@ public class ParcelViewer extends JFrame {
         //Create Buttons
         _slctParcelFileBtn = new JButton("Select Parcel File");
         _slctCustomerFileBtn = new JButton("Select Customer File");
-        _prcParcelBtn = new JButton("Process Parcel File");
-        _prcCustomerBtn = new JButton("Process Customer File");
+        _viewCombinedDataBtn = new JButton("View Combined Data");
 
         //Add event listeners to Buttons
         _slctParcelFileBtn.addActionListener(new FileChooseListener(true));
         _slctCustomerFileBtn.addActionListener(new FileChooseListener(false));
-        _prcParcelBtn.addActionListener(new ProcessFileListener(true));
-        _prcCustomerBtn.addActionListener(new ProcessFileListener(false));
-
+        _viewCombinedDataBtn.addActionListener(new ViewCombinedDataListener());
         //Add buttons to a panel that is 2x2 using the inbuilt gridbaglayout provides granular ability to set postioning of GUI elements.
         gbConstrian.fill = GridBagConstraints.BOTH; 
         gbConstrian.insets = new Insets(5,5,5,5); //little bit of padding!
@@ -69,48 +68,28 @@ public class ParcelViewer extends JFrame {
         gbConstrian.gridx = 0;
         gbConstrian.gridy = 0;
         add(_slctParcelFileBtn, gbConstrian);
-        gbConstrian.gridx = 1;
-        gbConstrian.gridy = 0;
-        add(_slctCustomerFileBtn, gbConstrian);
         gbConstrian.gridx = 0;
         gbConstrian.gridy = 1;
-        add(_prcParcelBtn, gbConstrian);
-        gbConstrian.gridx = 1;
-        gbConstrian.gridy = 1;
-        add(_prcCustomerBtn, gbConstrian);          
-        //scroll panel for output display shown below buttons (y pos of 2)
-        gbConstrian.gridx = 0; 
+        add(_slctCustomerFileBtn, gbConstrian);     
+        gbConstrian.gridx  = 0;
         gbConstrian.gridy = 2;
-        gbConstrian.gridwidth = 2;
-        gbConstrian.weightx = 1.0;
-        gbConstrian.weighty = 1.0;
-        add(new JScrollPane(_parcelTable), gbConstrian);
-        gbConstrian.gridy = 3;
-        add(new JScrollPane(_customerTable), gbConstrian);
-
-        //status updates shown below panel (y pos of 3)
+        add(_viewCombinedDataBtn, gbConstrian);
+        //scroll panel for output display shown below buttons (y pos of 2)
         gbConstrian.gridy = 3;
         gbConstrian.weighty = 0.0;
         add(_statusLbl, gbConstrian);
+        
+        gbConstrian.gridy = 4;
+        gbConstrian.weightx = 1.0;
+        gbConstrian.weighty = 1.0;
+        add(new JScrollPane(_parcelTable), gbConstrian);
+        gbConstrian.gridy = 5;
+        add(new JScrollPane(_customerTable), gbConstrian);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
-    private class ProcessFileListener implements ActionListener {
-        private boolean isParcelFile;
-
-        public ProcessFileListener(boolean isParcelFile){
-            this.isParcelFile = isParcelFile;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent event){
-            _statusLbl.setText("Processing " + (isParcelFile ? "parcel" : "customer") + " file...");
-        }
-    }
-
     private class FileChooseListener implements ActionListener {
         private boolean isParcelFile;
 
@@ -128,26 +107,32 @@ public class ParcelViewer extends JFrame {
                 _statusLbl.setText("Selected file: " + selectedFile.getAbsolutePath());
 
                 if(isParcelFile){
-                    ProcessFile(selectedFile, true);
+                    _parcelManager.readParcels(selectedFile.getAbsolutePath());
+                    parcelMap = _parcelManager.getParcelMap();
+                    updateParcelTable();
+                    //ProcessFile(selectedFile, true);
                 }
                 else{
-                    ProcessFile(selectedFile, false);
+                    _customerQueue.readCustomers(selectedFile.getAbsolutePath());
+                    customerMap = _customerQueue.getCustomerMap();
+                    updateCustomerTable();
+                    //ProcessFile(selectedFile, false);
                 }
             }
         }
     }
-
-    private void ProcessFile(File file, boolean isParcelFile) {
-        if(isParcelFile){
-            Map<String, Parcel> parcelMap = _parcelReader.readParcels(file.getAbsolutePath());
-            updateParcelTable(parcelMap);
-        }else{
-            Map<String, Customer> customerMap = _customerReader.readCustomers(file.getAbsolutePath());
-            updateCustomerTable(customerMap);
+    private class ViewCombinedDataListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent event){
+            if(parcelMap != null && customerMap != null){
+                new CombinedViewer(customerMap, parcelMap);
+            } else{
+                _statusLbl.setText("You must upload both parcel and customer data first!");
+            }
         }
     }
 
-    private void updateParcelTable(Map<String, Parcel> parcelMap){
+    private void updateParcelTable(){
         _tableModel.setRowCount(0);
         for(Parcel parcel : parcelMap.values()){
             _tableModel.addRow(new Object[] {
@@ -161,7 +146,7 @@ public class ParcelViewer extends JFrame {
         }
     }
 
-    private void updateCustomerTable(Map<String, Customer> customerMap){
+    private void updateCustomerTable(){
         _customerTableModel.setRowCount(0);
         for(Customer customer : customerMap.values()){
             _customerTableModel.addRow(new Object[]{
