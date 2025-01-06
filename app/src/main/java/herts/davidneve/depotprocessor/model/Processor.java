@@ -12,6 +12,7 @@ public class Processor {
         for (Customer customer : customerMap.values()) {
             Parcel parcel = parcelMap.get(customer.getId());
             if (parcel != null){
+                float costIncurred = calculateCost(parcel.getDaysinDepot(), parcel.getWeight(), parcel.getLength(), parcel.getHeight(), parcel.getWidth());
                 CombinedDataStore combinedDataStore = new CombinedDataStore(
                     customer.getId(),
                     parcel.getWeight(),
@@ -19,11 +20,26 @@ public class Processor {
                     parcel.getWidth(),
                     parcel.getHeight(),
                     parcel.getDaysinDepot(),
-                    customer.getFullName()
+                    customer.getFullName(),
+                    costIncurred
                 );
                 combineMap.put(customer.getId(), combinedDataStore);
             }
         }
         return combineMap;
-    }    
+    }
+    
+    public float calculateCost(int daysStored, float weight, float length, float height, float width){
+        float costPerDay  = 1.50f;
+        float factorWeight = 0.10f;
+        float factorDims = 0.05f;
+
+        float dimsCost = (length + height + width) * factorDims;
+        float weightCost = weight * factorWeight;
+        float storeCost = daysStored * costPerDay;
+
+        float costIncurred = dimsCost + weightCost + storeCost;
+
+        return Math.round(costIncurred * 100.00)/100.00f;
+    }
 }

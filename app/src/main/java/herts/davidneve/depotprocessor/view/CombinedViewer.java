@@ -19,6 +19,7 @@ public class CombinedViewer extends JFrame{
 
     private JTable comboTable;
     private DefaultTableModel comboTableModel;
+    private Map<String, CombinedDataStore> combineMap;
 
     public CombinedViewer(Map<String, Customer> customerMap, Map<String, Parcel> parcelMap){
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -27,7 +28,7 @@ public class CombinedViewer extends JFrame{
         GridBagConstraints gbconstrian = new GridBagConstraints();
 
         comboTableModel = new DefaultTableModel();
-        comboTableModel.setColumnIdentifiers(new String[] {"Parcel ID", "Customer Name", "Days in Depot", "Costs to be payed"});
+        comboTableModel.setColumnIdentifiers(new String[] {"Parcel ID", "Customer Name", "Days in Depot"});
         comboTable = new JTable(comboTableModel);
 
         Processor processor = new Processor();
@@ -40,6 +41,18 @@ public class CombinedViewer extends JFrame{
                 combinedDataStore.getDaysInDepot()
             });
         }
+
+        comboTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent event){
+                int row = comboTable.rowAtPoint(event.getPoint());
+                if (row >= 0){
+                    String parcelId = (String) comboTableModel.getValueAt(row, 0);
+                    CombinedDataStore combinedData = combineMap.get(parcelId);
+                    showParcelDetailsForm(combinedData);
+                }
+            }
+        });
         gbconstrian.fill = GridBagConstraints.BOTH;
         gbconstrian.insets = new Insets(5,5,5,5);
 
@@ -52,5 +65,9 @@ public class CombinedViewer extends JFrame{
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }    
+    }
+    
+    private void showParcelDetailsForm(CombinedDataStore combinedData){
+        new ParcelFormViewer(combinedData, combineMap);
+    }
 }

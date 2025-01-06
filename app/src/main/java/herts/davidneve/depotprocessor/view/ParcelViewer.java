@@ -109,13 +109,11 @@ public class ParcelViewer extends JFrame {
                     _parcelManager.readParcels(selectedFile.getAbsolutePath());
                     parcelMap = _parcelManager.getParcelMap();
                     updateParcelTable();
-                    //ProcessFile(selectedFile, true);
                 }
                 else{
                     _customerQueue.readCustomers(selectedFile.getAbsolutePath());
                     customerMap = _customerQueue.getCustomerMap();
                     updateCustomerTable();
-                    //ProcessFile(selectedFile, false);
                 }
             }
         }

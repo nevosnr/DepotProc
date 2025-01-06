@@ -2,51 +2,57 @@ package herts.davidneve.depotprocessor.model;
 
 public class CombinedDataStore {
 
-        private String _parcelId;
-        private float _weight;
-        private float _length;
-        private float _width;
-        private float _height;
-        private int _daysInDepot;
-        private String _customerName;
-    
-        public CombinedDataStore(String parcelId, float weight, float length, float width, float height, int daysInDepot, String customerName) {
-            this._parcelId = parcelId;
-            this._weight = weight;
-            this._length = length;
-            this._width = width;
-            this._height = height;
-            this._daysInDepot = daysInDepot;
-            this._customerName = customerName;
-        }
-    
-        public String getParcelId() {
-             return _parcelId;
-             }
+     private String _parcelId;
+     private float _weight;
+     private float _length;
+     private float _width;
+     private float _height;
+     private int _daysInDepot;
+     private String _customerName;
+     private float _costIncurred;
 
-        public float getWeight() {
-             return _weight;
-             }
+     public CombinedDataStore(String parcelId, float weight, float length, float width, float height, int daysInDepot, String customerName, float cost) {
+          this._parcelId = parcelId;
+          this._weight = weight;
+          this._length = length;
+          this._width = width;
+          this._height = height;
+          this._daysInDepot = daysInDepot;
+          this._customerName = customerName;
+          this._costIncurred = cost;
+     }
+     //'Getters'
+     public String getParcelId() {
+          return _parcelId;
+          }
 
-        public float getLength() {
-             return _length;
-             }
+     public float getWeight() {
+          return _weight;
+          }
 
-        public float getWidth() {
-             return _width;
-             }
+     public float getLength() {
+          return _length;
+          }
 
-        public float getHeight() {
-             return _height;
-             }
+     public float getWidth() {
+          return _width;
+          }
 
-        public int getDaysInDepot() {
-             return _daysInDepot;
-             }
+     public float getHeight() {
+          return _height;
+          }
 
-        public String getCustomerName() {
-             return _customerName;
-             }
+     public int getDaysInDepot() {
+          return _daysInDepot;
+          }
+
+     public String getCustomerName() {
+          return _customerName;
+          }
+
+     public float getCost(){
+          return _costIncurred;
+     }
 
     
     
