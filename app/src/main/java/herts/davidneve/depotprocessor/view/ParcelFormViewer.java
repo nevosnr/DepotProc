@@ -3,24 +3,33 @@ package herts.davidneve.depotprocessor.view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import herts.davidneve.depotprocessor.model.Auditor;
 import herts.davidneve.depotprocessor.model.CombinedDataStore;
-
 public class ParcelFormViewer extends JFrame {
 
     private JCheckBox _parcelCollected;
-    private CombinedDataStore combinedData;
-    private Map<String, CombinedDataStore> combineMap;
+    private JButton _parcelCollectedBtn;
+    private CombinedDataStore _combinedData;
+    private Map<String, CombinedDataStore> _combineMap;
+    private CombinedViewer _combinedViewer;
 
-    public ParcelFormViewer(CombinedDataStore combinedData, Map<String, CombinedDataStore> combineMap){    
+    public ParcelFormViewer(CombinedDataStore combinedData, Map<String, CombinedDataStore> combineMap, CombinedViewer combinedViewer){    
     
-        this.combinedData = combinedData;
-        this.combineMap = combineMap;
+        this._combinedData = combinedData;
+        this._combineMap = combineMap;
+        this._combinedViewer = combinedViewer;
+
+        _parcelCollectedBtn = new JButton("Collected");
+        _parcelCollectedBtn.addActionListener(new CollectedBtnListener());
     
         setTitle("Parcel Details");
         setLayout(new GridBagLayout());
@@ -56,10 +65,25 @@ public class ParcelFormViewer extends JFrame {
 
         _parcelCollected = new JCheckBox("Collected");
         add(_parcelCollected, gbConstraints);
+        gbConstraints.gridx = 1;
+        add(_parcelCollectedBtn, gbConstraints);
         gbConstraints.gridy ++;
 
         pack();
         setLocationRelativeTo(this);
         setVisible(true);
-    }    
+    }
+
+    private class CollectedBtnListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            if(_parcelCollected.isSelected()) {
+                _combineMap.remove(_combinedData.getParcelId());                
+                Auditor auditor = Auditor.getInstance();
+                auditor.addEntry("Parcel Collected: " + _combinedData.getParcelId() + " by: " + _combinedData.getCustomerName());
+                _combinedViewer.tableRefresh(_combineMap);
+                ParcelFormViewer.this.dispose();
+            }
+        }
+    }
 }

@@ -5,12 +5,10 @@ public class Customer {
     private String _customerFirstName;
     private String _customerLastName;
     private String _parcelID;
-    private int _sequenceNumber;
 
-    public Customer(String name, String id, int position){
+    public Customer(String name, String id){
         splitName(name);
         this._parcelID = id;
-        this._sequenceNumber = position;
     }
     //method to break the customer name into its constituent parts
     private void splitName(String name){
@@ -36,9 +34,5 @@ public class Customer {
 
     public String getId(){
         return _parcelID;
-    } 
-
-    public int getPos(){
-        return _sequenceNumber;
     }    
 }

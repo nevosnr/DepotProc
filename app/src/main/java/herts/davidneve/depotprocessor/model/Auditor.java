@@ -1,5 +1,8 @@
 package herts.davidneve.depotprocessor.model;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 public class Auditor {
@@ -22,9 +25,16 @@ public class Auditor {
         _auditEntries.add(entry);
     }
 
-    public List<String> getEntries(){
-        return _auditEntries;
+    public void outputToText(String filename){
+        try(BufferedWriter wr = new BufferedWriter(new FileWriter(filename))){
+            for (String entry : _auditEntries){
+                wr.write(entry);
+                wr.newLine();
+            }
+        }
+        catch (IOException error){
+            error.printStackTrace();
+            System.out.println("There was an error writing audit data to text file.");
+        }
     }
-
-    
 }

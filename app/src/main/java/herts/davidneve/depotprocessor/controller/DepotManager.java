@@ -2,6 +2,7 @@ package herts.davidneve.depotprocessor.controller;
 
 import javax.swing.SwingUtilities;
 
+import herts.davidneve.depotprocessor.model.Auditor;
 import herts.davidneve.depotprocessor.model.ParcelManager;
 import herts.davidneve.depotprocessor.model.QOfCustomers;
 import herts.davidneve.depotprocessor.view.ParcelViewer;
@@ -28,7 +29,12 @@ public class DepotManager {
 
     public static void main(String[] args) {
         DepotManager manager = new DepotManager();
-         manager.startApp();
+        Auditor auditor = Auditor.getInstance();
+
+        manager.startApp();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {auditor.outputToText("audit_log_DepotProc.txt");
+        }));
     }
 }  
 

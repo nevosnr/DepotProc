@@ -11,17 +11,15 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import herts.davidneve.depotprocessor.model.CombinedDataStore;
-import herts.davidneve.depotprocessor.model.Customer;
-import herts.davidneve.depotprocessor.model.Parcel;
-import herts.davidneve.depotprocessor.model.Processor;
-
 public class CombinedViewer extends JFrame{
 
     private JTable comboTable;
     private DefaultTableModel comboTableModel;
     private Map<String, CombinedDataStore> combineMap;
 
-    public CombinedViewer(Map<String, Customer> customerMap, Map<String, Parcel> parcelMap){
+    public CombinedViewer(Map<String, CombinedDataStore> combinedMap){
+        this.combineMap = combinedMap;
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Combined View of Parcels and Customer Data");
         setLayout(new GridBagLayout());
@@ -31,16 +29,7 @@ public class CombinedViewer extends JFrame{
         comboTableModel.setColumnIdentifiers(new String[] {"Parcel ID", "Customer Name", "Days in Depot"});
         comboTable = new JTable(comboTableModel);
 
-        Processor processor = new Processor();
-        Map<String, CombinedDataStore> combineMap = processor.combine(customerMap, parcelMap);
-
-        for(CombinedDataStore combinedDataStore : combineMap.values()){
-            comboTableModel.addRow(new Object[]{
-                combinedDataStore.getParcelId(),
-                combinedDataStore.getCustomerName(),
-                combinedDataStore.getDaysInDepot()
-            });
-        }
+        updateTable();
 
         comboTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -67,8 +56,24 @@ public class CombinedViewer extends JFrame{
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    private void updateTable(){
+        comboTableModel.setRowCount(0);
+        for(CombinedDataStore combinedDataStore : combineMap.values()){
+            comboTableModel.addRow(new Object[]{
+                combinedDataStore.getParcelId(),
+                combinedDataStore.getCustomerName(),
+                combinedDataStore.getDaysInDepot()
+            });
+        }
+    }
+
+    public void tableRefresh(Map<String, CombinedDataStore> newCombinedMap){
+        this.combineMap = newCombinedMap;
+        updateTable();
+    }
     
     private void showParcelDetailsForm(CombinedDataStore combinedData){
-        new ParcelFormViewer(combinedData, combineMap);
+        new ParcelFormViewer(combinedData, combineMap, this);
     }
 }

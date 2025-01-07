@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -16,9 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import herts.davidneve.depotprocessor.model.CombinedDataStore;
 import herts.davidneve.depotprocessor.model.Customer;
 import herts.davidneve.depotprocessor.model.Parcel;
 import herts.davidneve.depotprocessor.model.ParcelManager;
+import herts.davidneve.depotprocessor.model.Processor;
 import herts.davidneve.depotprocessor.model.QOfCustomers;
 
 public class ParcelViewer extends JFrame {
@@ -65,6 +68,7 @@ public class ParcelViewer extends JFrame {
         //Add buttons to a panel that is 2x2 using the inbuilt gridbaglayout provides granular ability to set postioning of GUI elements.
         gbConstrian.fill = GridBagConstraints.BOTH; 
         gbConstrian.insets = new Insets(5,5,5,5); //little bit of padding!
+
         //Buttons defined in a grid by their x/y coordinates.
         gbConstrian.gridx = 0;
         gbConstrian.gridy = 0;
@@ -75,21 +79,26 @@ public class ParcelViewer extends JFrame {
         gbConstrian.gridx  = 0;
         gbConstrian.gridy = 2;
         add(_viewCombinedDataBtn, gbConstrian);
+
         //Status Label telling user what is required.
         gbConstrian.gridy = 3;
         gbConstrian.weighty = 0.0;
         add(_statusLbl, gbConstrian);
+
         //Scroll panel to display parcels loaded into the application.
         gbConstrian.gridy = 4;
         gbConstrian.weightx = 1.0;
         gbConstrian.weighty = 1.0;
         add(new JScrollPane(_parcelTable), gbConstrian);
+
         //Additional buttons to add extra Customers and/or Parcels.
         gbConstrian.gridy = 5;
         gbConstrian.weighty = 0.0;
+   
         add(_addCustomer, gbConstrian);
         gbConstrian.gridy = 6;
         add(_addParcel, gbConstrian);
+
         //Scroll panel to display customers loaded into the application.
         gbConstrian.gridy = 7;
         gbConstrian.weightx = 1.0;
@@ -133,7 +142,9 @@ public class ParcelViewer extends JFrame {
         @Override
         public void actionPerformed(ActionEvent event){
             if(parcelMap != null && customerMap != null){
-                new CombinedViewer(customerMap, parcelMap);
+                Processor processor = new Processor();
+                TreeMap<String, CombinedDataStore> combMap = processor.combine(customerMap, parcelMap);
+                new CombinedViewer(combMap);
             } else{
                 _statusLbl.setText("You must upload both parcel and customer data first!");
             }

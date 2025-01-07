@@ -21,7 +21,7 @@ public class QOfCustomers {
                     String parcelId = values[1];
                     int pos = 0;
 
-                    Customer customer = new Customer(fullName, parcelId, pos);
+                    Customer customer = new Customer(fullName, parcelId);
 
                     _customerMap.put(parcelId, customer);
                 }
