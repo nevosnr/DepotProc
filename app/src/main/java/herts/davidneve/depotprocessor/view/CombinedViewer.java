@@ -53,6 +53,7 @@ public class CombinedViewer extends JFrame{
                 }
             }
         });
+        
         gbconstrian.fill = GridBagConstraints.BOTH;
         gbconstrian.insets = new Insets(5,5,5,5);
 

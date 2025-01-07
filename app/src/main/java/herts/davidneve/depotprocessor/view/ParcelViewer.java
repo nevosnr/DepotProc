@@ -27,7 +27,7 @@ public class ParcelViewer extends JFrame {
     private JTable _customerTable;
     private DefaultTableModel _tableModel;
     private DefaultTableModel _customerTableModel;
-    private JButton _slctParcelFileBtn, _slctCustomerFileBtn, _viewCombinedDataBtn;
+    private JButton _slctParcelFileBtn, _slctCustomerFileBtn, _viewCombinedDataBtn, _addCustomer, _addParcel;
     private JLabel _statusLbl;
     private ParcelManager _parcelManager;
     private QOfCustomers _customerQueue;
@@ -55,6 +55,8 @@ public class ParcelViewer extends JFrame {
         _slctParcelFileBtn = new JButton("Select Parcel File");
         _slctCustomerFileBtn = new JButton("Select Customer File");
         _viewCombinedDataBtn = new JButton("View Combined Data");
+        _addCustomer = new JButton("Add Customer");
+        _addParcel = new JButton("Add Parcel");
 
         //Add event listeners to Buttons
         _slctParcelFileBtn.addActionListener(new FileChooseListener(true));
@@ -73,16 +75,25 @@ public class ParcelViewer extends JFrame {
         gbConstrian.gridx  = 0;
         gbConstrian.gridy = 2;
         add(_viewCombinedDataBtn, gbConstrian);
-        //scroll panel for output display shown below buttons (y pos of 2)
+        //Status Label telling user what is required.
         gbConstrian.gridy = 3;
         gbConstrian.weighty = 0.0;
         add(_statusLbl, gbConstrian);
-        
+        //Scroll panel to display parcels loaded into the application.
         gbConstrian.gridy = 4;
         gbConstrian.weightx = 1.0;
         gbConstrian.weighty = 1.0;
         add(new JScrollPane(_parcelTable), gbConstrian);
+        //Additional buttons to add extra Customers and/or Parcels.
         gbConstrian.gridy = 5;
+        gbConstrian.weighty = 0.0;
+        add(_addCustomer, gbConstrian);
+        gbConstrian.gridy = 6;
+        add(_addParcel, gbConstrian);
+        //Scroll panel to display customers loaded into the application.
+        gbConstrian.gridy = 7;
+        gbConstrian.weightx = 1.0;
+        gbConstrian.weighty = 1.0;
         add(new JScrollPane(_customerTable), gbConstrian);
 
         pack();
