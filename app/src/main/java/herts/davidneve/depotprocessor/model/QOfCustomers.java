@@ -19,8 +19,6 @@ public class QOfCustomers {
                 if (values.length >= 2) {
                     String fullName = values[0];
                     String parcelId = values[1];
-                    int pos = 0;
-
                     Customer customer = new Customer(fullName, parcelId);
 
                     _customerMap.put(parcelId, customer);
@@ -34,7 +32,11 @@ public class QOfCustomers {
     }  
     
     public void addCustomer(Customer customer){
+        if (isCustValid(customer)){
         _customerMap.put(customer.getId(), customer);
+        } else{
+            System.out.println("Something has gone wrong with your customer, try something else!");
+        }
     }
 
     public Customer getCustomer(String id){
@@ -44,4 +46,10 @@ public class QOfCustomers {
     public Map<String, Customer> getCustomerMap(){
         return _customerMap;
     }
+
+    //to ensure data integrity of the application a simple check will be performed prior to any data being added.
+    private boolean isCustValid(Customer customer) {
+        return customer.getFirstName() != null && customer.getId() != null;
+    }
+
 }
